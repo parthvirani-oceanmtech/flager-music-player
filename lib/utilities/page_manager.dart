@@ -1,4 +1,5 @@
 import 'package:audio_service/audio_service.dart';
+import 'package:flager_player/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flager_player/notifiers/play_button_notifier.dart';
 import 'package:flager_player/notifiers/progress_notifier.dart';
@@ -14,7 +15,7 @@ class PageManager {
   final currentSongArtIdNotifier = ValueNotifier<int>(0);
   final currentSongArtistNotifier = ValueNotifier<String>('');
   final playlistNotifier = ValueNotifier<List<String>>([]);
-  final currentSongModelsNotifier = ValueNotifier<List<SongModel>>([]);
+  final currentSongModelsNotifier = ValueNotifier<List<AudioModel>>([]);
   final progressNotifier = ProgressNotifier();
   final repeatButtonNotifier = RepeatButtonNotifier();
   final isFirstSongNotifier = ValueNotifier<bool>(true);
@@ -37,55 +38,50 @@ class PageManager {
   }
 
   Future<void> _loadPlaylist() async {
-
-    List<SongModel> songs = await _audioQuery.querySongs(
-      sortType: SongSortType.DATE_ADDED,
-      orderType: null,
-      uriType: UriType.EXTERNAL,
-      ignoreCase: true,
+    List<AudioModel> songs = await _audioQuery.querySongs(
+      filter: MediaFilter.forSongs(
+        audioSortType: AudioSortType.DATE_ADDED,
+        orderType: OrderType.DESC_OR_GREATER,
+        ignoreCase: true,
+      ),
     );
 
     currentSongModelsNotifier.value = songs;
 
-    final mediaItems = songs.map((song) => MediaItem(
-      id: song.data,
-      album: song.album ?? '',
-      artist: song.artist ?? '',
-      title: song.title ,
-      extras: {'url': song.data, "artId": song.id},
-    )).toList();
+    final mediaItems = songs
+        .map((song) => MediaItem(
+              id: song.data,
+              album: song.album ?? '',
+              artist: song.artist ?? '',
+              title: song.title,
+              extras: {'url': song.data, "artId": song.id},
+            ))
+        .toList();
 
     _audioHandler.addQueueItems(mediaItems);
   }
 
-
-
-  Future<void> onClickSongItem(List<SongModel> songs, String mediaId) async {
-
+  Future<void> onClickSongItem(List<AudioModel> songs, String mediaId) async {
     currentSongModelsNotifier.value = songs;
 
-    final mediaItems = songs.map((song) => MediaItem(
-      id: song.data,
-      album: song.album ?? '',
-      artist: song.artist ?? '',
-      title: song.title ,
-      extras: {'url': song.data, "artId": song.id},
-    )).toList();
-
-
+    final mediaItems = songs
+        .map((song) => MediaItem(
+              id: song.data,
+              album: song.album ?? '',
+              artist: song.artist ?? '',
+              title: song.title,
+              extras: {'url': song.data, "artId": song.id},
+            ))
+        .toList();
 
     final newIndex = songs.indexWhere((item) => item.data == mediaId);
     currentSongIndexNotifier.value = newIndex;
     await _audioHandler.addQueueItems(mediaItems);
     _audioHandler.play();
-
   }
-
-
 
   void _listenToChangesInPlaylist() {
     _audioHandler.queue.listen((playlist) {
-
       if (playlist.isEmpty) {
         playlistNotifier.value = [];
         currentSongTitleNotifier.value = '';
@@ -104,8 +100,7 @@ class PageManager {
     _audioHandler.playbackState.listen((playbackState) {
       final isPlaying = playbackState.playing;
       final processingState = playbackState.processingState;
-      if (processingState == AudioProcessingState.loading ||
-          processingState == AudioProcessingState.buffering) {
+      if (processingState == AudioProcessingState.loading || processingState == AudioProcessingState.buffering) {
         playButtonNotifier.value = ButtonState.loading;
       } else if (!isPlaying) {
         playButtonNotifier.value = ButtonState.paused;
@@ -207,8 +202,7 @@ class PageManager {
     }
   }
 
-  Future<void> add(SongModel song) async {
-
+  Future<void> add(AudioModel song) async {
     final mediaItem = MediaItem(
       id: song.data,
       album: song.album,

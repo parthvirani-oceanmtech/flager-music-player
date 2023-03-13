@@ -17,21 +17,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-
   @override
   Widget build(BuildContext context) {
-
     return DefaultTabController(
       length: 5,
       initialIndex: 0,
       child: Scaffold(
         drawer: DrawerMenu(),
         body: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled){
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               SliverAppBar(
-
                 pinned: true,
                 floating: true,
                 forceElevated: innerBoxIsScrolled,
@@ -41,12 +37,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: IconButton(
                       icon: Icon(Icons.search_rounded),
-                      onPressed: (){
+                      onPressed: () {
                         showModalBottomSheet(
                             isScrollControlled: true,
                             backgroundColor: Colors.transparent,
                             context: context,
-                            builder: (context){
+                            builder: (context) {
                               return SearchBoxModal();
                             });
                       },
@@ -83,9 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           body: Column(
             children: [
-              PlayerBoxSmall(),
               Expanded(
-
                 child: TabBarView(
                   children: [
                     AllSongsScreen(),
@@ -95,7 +89,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     FoldersScreen(),
                   ],
                 ),
-              )
+              ),
+              PlayerBoxSmall(),
             ],
           ),
         ),

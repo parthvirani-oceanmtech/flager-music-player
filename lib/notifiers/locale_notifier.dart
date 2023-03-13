@@ -1,32 +1,22 @@
 import 'package:flager_player/utilities/storage_manager.dart';
 import 'package:flutter/material.dart';
 
-class LocaleNotifier with ChangeNotifier{
+class LocaleNotifier with ChangeNotifier {
   Locale? _locale;
   String? _fontFamily;
   final List<Map> _locales = [
-    {
-      "code": "fa",
-      "title": "فارسی",
-      "locale": const Locale("fa", "IR")
-    },
-    {
-      "code": "en",
-      "title": "English",
-      "locale": const Locale("en", "US")
-    }
+    {"code": "en", "title": "English", "locale": const Locale("en", "US")},
+    {"code": "fa", "title": "فارسی", "locale": const Locale("fa", "IR")},
   ];
 
-
-  LocaleNotifier(){
+  LocaleNotifier() {
     _init();
   }
 
-
-  void _init() async{
+  void _init() async {
     String? localeCode = await StorageManager.readData("localeCode");
 
-    switch(localeCode){
+    switch (localeCode) {
       case "fa":
         _fontFamily = "Vazir";
         _locale = _locales.firstWhere((element) => localeCode == element["code"])["locale"];
@@ -43,9 +33,8 @@ class LocaleNotifier with ChangeNotifier{
     notifyListeners();
   }
 
-
   void changeLocale(String localeCode) {
-    if(localeCode == "fa" || localeCode == "en"){
+    if (localeCode == "fa" || localeCode == "en") {
       StorageManager.saveData("localeCode", localeCode);
       _init();
     }

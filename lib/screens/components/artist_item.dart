@@ -4,7 +4,6 @@ import 'package:flager_player/screens/components/songs_modal_sheet.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 class ArtistItem extends StatefulWidget {
-
   final ArtistModel artistModel;
   const ArtistItem({required this.artistModel, Key? key}) : super(key: key);
 
@@ -15,23 +14,28 @@ class ArtistItem extends StatefulWidget {
 class _ArtistItemState extends State<ArtistItem> {
   final OnAudioQuery _audioQuery = OnAudioQuery();
 
-  _onClickArtist(BuildContext context, int artistId) async{
-    List<SongModel> songs = await _audioQuery.queryAudiosFrom(
-      AudiosFromType.ARTIST_ID,
-      artistId,
-      // You can also define a sortType
-      sortType: SongSortType.TITLE, // Default
-      orderType: OrderType.ASC_OR_SMALLER, // Default
+  _onClickArtist(BuildContext context, int artistId) async {
+    List<AudioModel> songs = await _audioQuery.queryAudios(
+      filter: MediaFilter.forAudios(
+        audioSortType: AudioSortType.TITLE,
+        orderType: OrderType.ASC_OR_SMALLER,
+        toQuery: {
+          MediaColumns.Artist.ID: [artistId.toString()]
+        },
+      ),
     );
+
     showModalBottomSheet(
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
         context: context,
-        builder: (context){
-          return SongsModalSheet(songs: songs, title: "Artist ${widget.artistModel.artist}",);
+        builder: (context) {
+          return SongsModalSheet(
+            songs: songs,
+            title: "Artist ${widget.artistModel.artist}",
+          );
         });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +56,10 @@ class _ArtistItemState extends State<ArtistItem> {
                           height: 50,
                           width: 50,
                           color: Theme.of(context).primaryColor,
-                          child: Icon(Icons.person_rounded, color: Colors.white,),
+                          child: Icon(
+                            Icons.person_rounded,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -60,11 +67,21 @@ class _ArtistItemState extends State<ArtistItem> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(widget.artistModel.artist, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16), overflow: TextOverflow.ellipsis,),
-                          SizedBox(height: 8.0,),
+                          Text(
+                            widget.artistModel.artist,
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          SizedBox(
+                            height: 8.0,
+                          ),
                           Opacity(
                             opacity: 0.5,
-                            child: Text("${widget.artistModel.numberOfTracks} موزیک", style: TextStyle( fontSize: 12), overflow: TextOverflow.ellipsis,),
+                            child: Text(
+                              "${widget.artistModel.numberOfTracks} موزیک",
+                              style: TextStyle(fontSize: 12),
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ],
                       ),
@@ -76,9 +93,14 @@ class _ArtistItemState extends State<ArtistItem> {
           ],
         ),
         Padding(
-          padding: AppLocalizations.of(context)!.localeName == "fa" ?
-          const EdgeInsets.only(right:82.0) : const EdgeInsets.only(left:82.0),
-          child: Container(height: 0.13, color: Colors.blueGrey, width: double.infinity,),
+          padding: AppLocalizations.of(context)!.localeName == "fa"
+              ? const EdgeInsets.only(right: 82.0)
+              : const EdgeInsets.only(left: 82.0),
+          child: Container(
+            height: 0.13,
+            color: Colors.blueGrey,
+            width: double.infinity,
+          ),
         )
       ],
     );

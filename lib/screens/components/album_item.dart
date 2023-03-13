@@ -5,34 +5,37 @@ import 'package:on_audio_query/on_audio_query.dart';
 
 class AlbumItem extends StatefulWidget {
   final AlbumModel albumModel;
-  const AlbumItem({ required this.albumModel, Key? key}) : super(key: key);
+  const AlbumItem({required this.albumModel, Key? key}) : super(key: key);
 
   @override
   State<AlbumItem> createState() => _AlbumItemState();
 }
 
 class _AlbumItemState extends State<AlbumItem> {
-
   final OnAudioQuery _audioQuery = OnAudioQuery();
 
-
-  _onClickAlbum(BuildContext context, int albumId) async{
-    List<SongModel> songs = await _audioQuery.queryAudiosFrom(
-      AudiosFromType.ALBUM_ID,
-      albumId,
-      // You can also define a sortType
-      sortType: SongSortType.TITLE, // Default
-      orderType: OrderType.ASC_OR_SMALLER, // Default
+  _onClickAlbum(BuildContext context, int albumId) async {
+    List<AudioModel> songs = await _audioQuery.queryAudios(
+      filter: MediaFilter.forAudios(
+        audioSortType: AudioSortType.TITLE,
+        orderType: OrderType.ASC_OR_SMALLER,
+        toQuery: {
+          MediaColumns.Album.ID: [albumId.toString()]
+        },
+      ),
     );
     showModalBottomSheet(
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        context: context,
-        builder: (context){
-          return SongsModalSheet(songs: songs, title: "Album ${widget.albumModel.album}",);
-        });
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (context) {
+        return SongsModalSheet(
+          songs: songs,
+          title: "Album ${widget.albumModel.album}",
+        );
+      },
+    );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +56,10 @@ class _AlbumItemState extends State<AlbumItem> {
                           height: 50,
                           width: 50,
                           color: Theme.of(context).primaryColor,
-                          child: Icon(Icons.album_rounded, color: Colors.white,),
+                          child: Icon(
+                            Icons.album_rounded,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -61,11 +67,21 @@ class _AlbumItemState extends State<AlbumItem> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(widget.albumModel.album, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16), overflow: TextOverflow.ellipsis,),
-                          SizedBox(height: 8.0,),
+                          Text(
+                            widget.albumModel.album,
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          SizedBox(
+                            height: 8.0,
+                          ),
                           Opacity(
                             opacity: 0.5,
-                            child: Text("${widget.albumModel.numOfSongs} موزیک", style: TextStyle( fontSize: 12), overflow: TextOverflow.ellipsis,),
+                            child: Text(
+                              "${widget.albumModel.numOfSongs} موزیک",
+                              style: TextStyle(fontSize: 12),
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ],
                       ),
@@ -77,9 +93,14 @@ class _AlbumItemState extends State<AlbumItem> {
           ],
         ),
         Padding(
-          padding: AppLocalizations.of(context)!.localeName == "fa" ?
-          const EdgeInsets.only(right:82.0) : const EdgeInsets.only(left:82.0),
-          child: Container(height: 0.13, color: Colors.blueGrey, width: double.infinity,),
+          padding: AppLocalizations.of(context)!.localeName == "fa"
+              ? const EdgeInsets.only(right: 82.0)
+              : const EdgeInsets.only(left: 82.0),
+          child: Container(
+            height: 0.13,
+            color: Colors.blueGrey,
+            width: double.infinity,
+          ),
         )
       ],
     );

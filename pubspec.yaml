@@ -33,30 +33,30 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.5
   get_it: ^7.2.0
   flutter_localizations:
     sdk: flutter
   intl: ^0.17.0
-  auto_route: ^4.0.1
-  shared_preferences: ^2.0.15
-  provider: ^6.0.3
-  flutter_bloc: ^8.0.1
-  equatable: ^2.0.3
+  auto_route: ^5.0.4
+  shared_preferences: ^2.0.18
+  provider: ^6.0.5
+  flutter_bloc: ^8.1.2
+  equatable: ^2.0.5
   dio: ^4.0.6
   either_dart: ^0.1.4
   just_audio: ^0.9.24
   audio_service: ^0.18.4
   audio_video_progress_bar: ^0.10.0
-  path_provider: ^2.0.10
-  on_audio_query: ^2.6.1
+  path_provider: ^2.0.13
+  on_audio_query: ^3.0.0-beta.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  auto_route_generator: ^4.0.0
-  build_runner: ^2.1.11
-  build_test: ^2.1.5
+  auto_route_generator: ^5.0.3
+  build_runner: ^2.3.3
+  build_test: ^2.1.6
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -83,7 +83,6 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/images/
-    - assets/icons/
     - assets/fonts/
     - assets/l10n/
   # An image asset can refer to one or more resolution-specific "variants", see
