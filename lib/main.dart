@@ -11,16 +11,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flager_player/utilities/page_manager.dart';
 import 'package:provider/provider.dart';
 
-
-
-void main() async{
+void main() async {
   Provider.debugCheckInvalidValueType = null;
   await setupServiceLocator();
-  runApp(
-      AppProviders(
-        child: MyApp(),
-      )
-  );
+  runApp(AppProviders(
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatefulWidget {
@@ -48,19 +44,16 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp.router(
       title: "Flager Player",
       theme: _themeModel.themeData(
           color: Provider.of<ThemeColorProvider>(context).getThemeColor,
           brightness: Brightness.light,
-          fontFamily: Provider.of<LocaleNotifier>(context).getFontFamily
-      ),
+          fontFamily: Provider.of<LocaleNotifier>(context).getFontFamily),
       darkTheme: _themeModel.themeData(
           color: Provider.of<ThemeColorProvider>(context).getThemeColor,
           brightness: Brightness.dark,
-          fontFamily: Provider.of<LocaleNotifier>(context).getFontFamily
-      ),
+          fontFamily: Provider.of<LocaleNotifier>(context).getFontFamily),
       themeMode: Provider.of<ThemeModeProvider>(context).getThemeMode,
       routerDelegate: AutoRouterDelegate(
         _appRouter,
@@ -75,6 +68,3 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-
-
-
